@@ -10,14 +10,20 @@ networks:
 
 services:
   app:
-#    image: "php:8.2-apache"
     build:
       context: .docker/php
     restart: always
     ports:
-    - "8081:80"
+      - "8081:80"
     volumes:
-    - .:/var/www/html
+      - .:/var/www/html
+    networks:
+      - php_advanced
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
     networks:
       - php_advanced
   mysql_db:
@@ -27,6 +33,9 @@ services:
       - "33061:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: Db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
     volumes:
       - "mysql_db_volume:/var/lib/mysql"
     networks:
