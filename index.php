@@ -27,3 +27,5 @@ class dd implements d{
 }
 
 
+
+include 'ValueObject.php';
