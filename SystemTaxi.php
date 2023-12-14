@@ -4,10 +4,10 @@ class TaxiSystem
 {
     public static function createTaxi($type): Taxi
     {
-        return match ($type) {
-            'Economy' => new EconomyTaxi(),
-            'Standard' => new StandardTaxi(),
-            'Lux' => new LuxTaxi(),
+        return match (strtolower($type)) {
+            'economy' => new EconomyTaxi(),
+            'standard' => new StandardTaxi(),
+            'lux' => new LuxTaxi(),
             default => throw new InvalidArgumentException("Invalid taxi type: $type"),
         };
     }
@@ -15,23 +15,22 @@ class TaxiSystem
 
 abstract class Taxi
 {
-    protected string $model;
-    protected int|float $price;
+    public string $model;
+    public int|float $price;
 
-    public function getModel(): string
-    {
-        return $this->model;
-    }
+    abstract function createCar(): void;
+    abstract function __construct();
 
-    public function getPrice(): float|int
-    {
-        return $this->price;
-    }
 }
 
 class EconomyTaxi extends Taxi
 {
     public function __construct()
+    {
+        $this->createCar();
+    }
+
+    public function createCar(): void
     {
         $this->model = 'Toyota';
         $this->price = 10;
@@ -42,6 +41,11 @@ class StandardTaxi extends Taxi
 {
     public function __construct()
     {
+        $this->createCar();
+    }
+
+    public function createCar(): void
+    {
         $this->model = 'Honda';
         $this->price = 20;
     }
@@ -51,17 +55,22 @@ class LuxTaxi extends Taxi
 {
     public function __construct()
     {
+        $this->createCar();
+    }
+
+    public function createCar(): void
+    {
         $this->model = 'Mercedes';
         $this->price = 50;
     }
 }
 
 try {
-    $selectedTaxiType = 'Standard';
+    $selectedTaxiType = 'economy';
     $taxi = TaxiSystem::createTaxi($selectedTaxiType);
 
-    echo " Model: " . $taxi->getModel();
-    echo " Price: $" . $taxi->getPrice();
+    echo " Model: " . $taxi->model;
+    echo " Price: $" . $taxi->price;
 } catch (InvalidArgumentException $e) {
     echo $e->getMessage();
 }
